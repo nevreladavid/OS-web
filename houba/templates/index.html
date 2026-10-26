@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderní Docker Aplikace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Odkaz na samostatný CSS soubor -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <div class="badge">⚡ Docker + PostgreSQL</div>
+            <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Přepnout režim">🌙</button>
+        </div>
+        
+        <h1>Správce hodnot</h1>
+        <p class="subtitle">Zapište novou hodnotu do databáze běžící v Docker kontejneru.</p>
+        
+        <form method="POST">
+            <input type="text" name="hodnota" placeholder="Sem napište zprávu..." maxlength="255" required autocomplete="off">
+            <button type="submit">Uložit</button>
+        </form>
+
+        <div class="list-title">Historie záznamů v DB:</div>
+        <div class="list-container">
+            {% for z in zaznamy %}
+            <div class="item">
+                <span class="item-text">{{ z.text }}</span>
+                <span class="item-date">{{ z.date }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <footer>Běží přes Docker Compose • Všechna data jsou trvalá</footer>
+    </div>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const btn = document.getElementById('themeBtn');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            btn.textContent = '☀️';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            btn.textContent = isLight ? '☀️' : '🌙';
+        }
+    </script>
+</body>
+</html>
